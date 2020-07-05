@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/my_odoo_addons.iml" filepath="$PROJECT_DIR$/.idea/my_odoo_addons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../odoo-13.0-CE/.idea/odoo-13.0-CE.iml" filepath="$PROJECT_DIR$/../odoo-13.0-CE/.idea/odoo-13.0-CE.iml" />
+    </modules>
+  </component>
+</project>
