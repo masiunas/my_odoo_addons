@@ -8,5 +8,6 @@
     The module adds the ability to add any number of contacts (phone numbers, mailboxes, usernames etc.) for partners.
     """,
     "depends": ["base"],
+    "data": ["views/*.xml"],
     "installable": True,
 }
