@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_contact_form_view" model="ir.ui.view">
+        <field name="name">partner.contact.form</field>
+        <field name="model">partner.contact</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group name="partner" string="Partner">
+                            <field name="image" widget="image" attrs="{'invisible': [('image','=', False)]}" />
+                            <field name="partner_id" required="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="contact" string="Contact">
+                            <field name="sequence" invisible="1"/>
+                            <field name="contact_type" required="1"/>
+                            <field name="value" required="1"/>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="partner_contact_tree_view" model="ir.ui.view">
+        <field name="name">partner.contact.tree</field>
+        <field name="model">partner.contact</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence"/>
+                <field name="contact_type"/>
+                <field name="value"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="partner_contact_action" model="ir.actions.act_window">
+        <field name="name">Partner contact</field>
+        <field name="res_model">partner.contact</field>
+        <field name="view_mode">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem id="partner_contact_menu"
+              name="Partner contacts"
+              action="partner_contact_action"
+              sequence="5" parent="contacts.res_partner_menu_config"/>
+
+
+</odoo>

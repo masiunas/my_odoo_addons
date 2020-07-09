@@ -21,10 +21,11 @@ class PartnerContact(models.Model):
     _description = 'Different types of contact in partner'
 
     partner_id = fields.Many2one('res.partner', string='Contact', index=True, ondelete='cascade')
-    image = fields.Binary(related='partner_id.image')
+    image = fields.Binary(related='partner_id.image_1920', string='Photo')
     sequence = fields.Integer(string='Priority', default=0, help='The higher the record, the higher its priority!')
     value = fields.Char(string='Value')
     contact_type = fields.Selection(CONTACT_TYPE_SEL, string='Type')
+    note = fields.Text(string='Note')
 
 
 class PartnerContactTags(models.Model):

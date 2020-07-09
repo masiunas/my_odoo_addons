@@ -7,7 +7,10 @@
     "summary": """
     The module adds the ability to add any number of contacts (phone numbers, mailboxes, usernames etc.) for partners.
     """,
-    "depends": ["base"],
-    "data": ["views/*.xml"],
+    "depends": ["base", "contacts"],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/partner_contact_views.xml",
+    ],
     "installable": True,
 }

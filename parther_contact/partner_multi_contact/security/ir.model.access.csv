@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_partner_contact,access_partner_contact,model_partner_contact,base.group_user,1,1,1,1
+access_partner_contact_tags,access_partner_contact_tags,model_partner_contact_tags,base.group_user,1,1,1,1
