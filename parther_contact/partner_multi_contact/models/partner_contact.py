@@ -26,6 +26,7 @@ class PartnerContact(models.Model):
     value = fields.Char(string='Value')
     contact_type = fields.Selection(CONTACT_TYPE_SEL, string='Type')
     note = fields.Text(string='Note')
+    contact_tag_ids = fields.Many2many('partner.contact.tags', 'partner_tags', string='Tags')
 
 
 class PartnerContactTags(models.Model):
