@@ -1,6 +1,8 @@
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 import logging
+
 _logger = logging.getLogger(__name__)
 
 CONTACT_TYPE_SEL = [
@@ -28,6 +30,28 @@ class PartnerContact(models.Model):
     note = fields.Text(string='Note')
     contact_tag_ids = fields.Many2many('partner.contact.tags', 'partner_tags', string='Tags')
 
+    @api.onchange('partner_id', 'value', 'contact_type')
+    def _onchange_check_duplicates(self):
+        """
+        The method checks if this partner already has a similar contact.
+        :return:
+        """
+        partner_id = self._context.get('default_partner_id', False)
+        value = self.value
+        contact_type = self.contact_type
+        if partner_id and value and contact_type:
+            search_domain = [
+                ('partner_id', '=', partner_id),
+                ('value', '=', value),
+                ('contact_type', '=', contact_type),
+            ]
+            result = self.search(search_domain)
+            if result:
+                type_ = dict(self._fields['contact_type']._description_selection(self.env)).get(contact_type)
+                message = _('{type} {value} already exists with {partner}.'.format(type=type_, value=value,
+                                                                                   partner=self.partner_id.name))
+                raise UserError(message)
+
 
 class PartnerContactTags(models.Model):
     _name = 'partner.contact.tags'
@@ -36,4 +60,3 @@ class PartnerContactTags(models.Model):
     name = fields.Char(string="Name", translate=True)
     color = fields.Integer(string="Color",
                            help="Odoo color index [0:9]")
-
