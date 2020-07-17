@@ -12,8 +12,8 @@
                            context="{'default_partner_id': active_id, 'partner_readonly': True}">
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>
-                            <field name="contact_type"/>
-                            <field name="value"/>
+                            <field name="contact_type" required="1"/>
+                            <field name="value" required="1"/>
                             <field name="note"/>
                             <field name="contact_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </tree>

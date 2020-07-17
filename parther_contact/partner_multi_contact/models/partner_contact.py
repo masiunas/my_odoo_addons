@@ -21,14 +21,33 @@ CONTACT_TYPE_SEL = [
 class PartnerContact(models.Model):
     _name = 'partner.contact'
     _description = 'Different types of contact in partner'
+    _rec_name = 'display_name'
+    _order = 'sequence asc, contact_type'
 
+    # Related fields
     partner_id = fields.Many2one('res.partner', string='Contact', index=True, ondelete='cascade')
-    image = fields.Binary(related='partner_id.image_1920', string='Photo')
+    contact_tag_ids = fields.Many2many('partner.contact.tags', 'partner_tags', string='Tags')
+    # Base fields
     sequence = fields.Integer(string='Priority', default=0, help='The higher the record, the higher its priority!')
     value = fields.Char(string='Value')
-    contact_type = fields.Selection(CONTACT_TYPE_SEL, string='Type')
     note = fields.Text(string='Note')
-    contact_tag_ids = fields.Many2many('partner.contact.tags', 'partner_tags', string='Tags')
+    display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
+
+    image = fields.Binary(related='partner_id.image_1920', string='Photo')
+    contact_type = fields.Selection(CONTACT_TYPE_SEL, string='Type')
+
+    @api.depends('partner_id', 'value', 'contact_type')
+    def _compute_display_name(self):
+        for record in self:
+            """
+            Compute custom display name
+            """
+            type_ = dict(record._fields['contact_type']._description_selection(record.env)).get(record.contact_type,
+                                                                                                False)
+            values = [record.partner_id.name, type_, record.value]
+            filtered_values = [value for value in values if value]
+            display_name = ' '.join(filtered_values)
+            record.display_name = display_name
 
     @api.onchange('partner_id', 'value', 'contact_type')
     def _onchange_check_duplicates(self):
@@ -37,6 +56,8 @@ class PartnerContact(models.Model):
         :return:
         """
         partner_id = self._context.get('default_partner_id', False)
+        if not partner_id:
+            partner_id = self.partner_id.id
         value = self.value
         contact_type = self.contact_type
         if partner_id and value and contact_type:

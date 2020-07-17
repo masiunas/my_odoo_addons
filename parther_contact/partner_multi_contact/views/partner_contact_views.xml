@@ -30,6 +30,7 @@
         <field name="model">partner.contact</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="partner_id"/>
                 <field name="contact_type"/>
                 <field name="value"/>
                 <field name="note"/>
@@ -43,6 +44,7 @@
         <field name="res_model">partner.contact</field>
         <field name="view_mode">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{'group_by':'partner_id'}</field>
     </record>
 
 
