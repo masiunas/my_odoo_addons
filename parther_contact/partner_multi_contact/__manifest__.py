@@ -14,4 +14,6 @@
         "views/res_partner_views.xml",
     ],
     "installable": True,
+    'post_init_hook': '_create_default_contact_data',
+
 }
