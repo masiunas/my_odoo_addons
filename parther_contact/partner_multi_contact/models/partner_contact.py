@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 import logging
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -30,18 +31,28 @@ class PartnerContact(models.Model):
     # Base fields
     sequence = fields.Integer(string='Priority', default=0, help='The higher the record, the higher its priority!')
     value = fields.Char(string='Value')
+    search_value = fields.Char(compute='_compute_search_value', store=True)
     note = fields.Text(string='Note')
     display_name = fields.Char(string='Name', compute='_compute_display_name', store=True)
 
     image = fields.Binary(related='partner_id.image_1920', string='Photo')
     contact_type = fields.Selection(CONTACT_TYPE_SEL, string='Type')
 
+    @api.depends('value')
+    def _compute_search_value(self):
+        """
+        Compute searchable value
+        """
+        for record in self:
+            search_value = record.get_searchable_value(record.value)
+            record.search_value = search_value
+
     @api.depends('partner_id', 'value', 'contact_type')
     def _compute_display_name(self):
+        """
+        Compute custom display name
+        """
         for record in self:
-            """
-            Compute custom display name
-            """
             type_ = dict(record._fields['contact_type']._description_selection(record.env)).get(record.contact_type,
                                                                                                 False)
             values = [record.partner_id.name, type_, record.value]
@@ -53,7 +64,7 @@ class PartnerContact(models.Model):
     def _onchange_check_duplicates(self):
         """
         The method checks if this partner already has a similar contact.
-        :return:
+        :return: None
         """
         partner_id = self._context.get('default_partner_id', False)
         if not partner_id:
@@ -73,11 +84,19 @@ class PartnerContact(models.Model):
                                                                                    partner=self.partner_id.name))
                 raise UserError(message)
 
+    def get_searchable_value(self, value):
+        if not value:
+            return value
+        if self.contact_type in ['email', 'username']:
+            return value.replace(' ', '')
+        else:
+            return re.sub(r'[^0-9]', '', value)
+
 
 class PartnerContactTags(models.Model):
     _name = 'partner.contact.tags'
     _description = 'Tags for contact in partner'
 
-    name = fields.Char(string="Name", translate=True)
-    color = fields.Integer(string="Color",
-                           help="Odoo color index [0:9]")
+    name = fields.Char(string='Name', translate=True)
+    color = fields.Integer(string='Color',
+                           help='Odoo color index [0:9]')

@@ -14,6 +14,7 @@
                             <field name="sequence" widget="handle"/>
                             <field name="contact_type" required="1"/>
                             <field name="value" required="1"/>
+                            <field name="search_value" groups="base.group_no_one"/>
                             <field name="note"/>
                             <field name="contact_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </tree>
